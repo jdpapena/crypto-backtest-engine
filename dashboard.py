@@ -20,7 +20,6 @@ from src.engine import process_candles
 
 st.set_page_config(
     page_title="Crypto Market Event Analytics",
-    page_icon="📊",
     layout="wide",
 )
 

@@ -1,3 +1,7 @@
+from src.analytics import (
+    create_price_chart,
+    print_summary,
+)
 from src.data import fetch_ccxt_data
 from src.engine import process_candles
 
@@ -11,7 +15,7 @@ def run_backtest():
         exchange_id="binanceus",
         symbol="BTC/USDT",
         timeframe="1h",
-        start_date="2026-05-01",
+        start_date="2025-06-01",
         end_date="2026-06-01",
     )
 
@@ -19,18 +23,28 @@ def run_backtest():
         print("No market data was retrieved.")
         return
 
-    event_count = process_candles(
+    events = process_candles(
         candles,
-        output_file="data/backtest_flash_log.csv",
         max_drop=-1500.0,
         max_pump=1500.0,
+        output_file="data/backtest_flash_log.csv",
     )
 
     print("=" * 50)
     print(f"RESULTS: Processed {len(candles):,} candles.")
-    print(f"Detected {event_count} market events.")
+    print(f"Detected {len(events)} market events.")
     print("Saved results to 'data/backtest_flash_log.csv'")
     print("=" * 50)
+
+    print_summary(
+        candles,
+        events,
+    )
+
+    create_price_chart(
+        candles,
+        events,
+    )
 
 
 if __name__ == "__main__":

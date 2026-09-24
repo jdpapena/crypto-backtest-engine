@@ -40,9 +40,18 @@ def fetch_ccxt_data(
             if not candles_batch:
                 break
 
-            all_candles.extend(candles_batch)
+            valid_candles = [
+                candle
+                for candle in candles_batch
+                if candle[0] < stop_ms
+            ]
 
-            last_candle = candles_batch[-1][0]
+            all_candles.extend(valid_candles)
+
+            if not valid_candles:
+                break
+
+            last_candle = valid_candles[-1][0]
 
             reached_dt = datetime.fromtimestamp(
                 last_candle / 1000,
